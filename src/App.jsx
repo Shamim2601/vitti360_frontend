@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import Blogs from './pages/Blogs';
 import Circulars from './pages/Circulars';
@@ -14,24 +14,22 @@ import './App.css';
 function App() {
   return (
     <>
-    <p>does it woerk??</p>
-    <Router>
-      
-      <Navbar />
-      <div className="container mt-5 pt-5">
-        <Switch>
-          <Route exact path="/" component={Home} />
-          <Route path="/blogs" component={Blogs} />
-          <Route path="/circulars" component={Circulars} />
-          <Route path="/login" component={Login} />
-          <Route path="/signup" component={Signup} />
-          <Route path="/chat" component={Chat} />
-          <Route path="/exam" component={Exam} />
-          <Route path="/bookshop" component={BookShop} />
-          <Route path="/support" component={Support} />
-        </Switch>
-      </div>
-    </Router>
+      <Router>
+        <Navbar />
+        <div className="container mt-5 pt-5">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/blogs" element={<Blogs />} />
+            <Route path="/circulars" element={<Circulars />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/chat" element={<Chat />} />
+            <Route path="/exam" element={<Exam />} />
+            <Route path="/bookshop" element={<BookShop />} />
+            <Route path="/support" element={<Support />} />
+          </Routes>
+        </div>
+      </Router>
     </>
   );
 }
