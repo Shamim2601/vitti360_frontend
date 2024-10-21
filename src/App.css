@@ -41,19 +41,3 @@
   color: #888;
 }
 
-
-header {
-  z-index: 1030; /* Ensure the header stays above other content */
-  background-color: white;
-}
-
-.navbar {
-  margin-top: 100px; /* Adjust this value based on the header height */
-}
-
-@media (max-width: 768px) {
-  header {
-    font-size: 0.9rem;
-  }
-}
-
