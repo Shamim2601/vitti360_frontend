@@ -1,35 +1,39 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import Home from './pages/Home';
+import Blogs from './pages/Blogs';
+import Circulars from './pages/Circulars';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import Chat from './pages/Chat';
+import Exam from './pages/Exam';
+import BookShop from './pages/BookShop';
+import Support from './pages/Support';
+import Navbar from './components/Navbar';
+import './App.css';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <p>does it woerk??</p>
+    <Router>
+      
+      <Navbar />
+      <div className="container mt-5 pt-5">
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route path="/blogs" component={Blogs} />
+          <Route path="/circulars" component={Circulars} />
+          <Route path="/login" component={Login} />
+          <Route path="/signup" component={Signup} />
+          <Route path="/chat" component={Chat} />
+          <Route path="/exam" component={Exam} />
+          <Route path="/bookshop" component={BookShop} />
+          <Route path="/support" component={Support} />
+        </Switch>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+    </Router>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
