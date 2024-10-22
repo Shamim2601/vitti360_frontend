@@ -51,23 +51,6 @@ export const Container = styled.div`
   }
 `;
 
-// this container is used to span two div side by side
-export const HorizontalContainer = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: flex-end;
-  gap: 80px;
-  width: 100%;
-  @media (max-width: 768px) {
-    flex-direction: column; /* Stack items vertically */
-    align-items: flex-start; /* Align items to the left */
-    gap: 20px; /* Adjust gap for mobile */
-  }
-`;
-export const ApprovalFilterContainer = styled.div`
-  margin-bottom: 0;
-`;
-
 export const CardTitle = styled.p`
   margin: ${({ margin }) => margin || `auto 0`};
   color: ${({ color, theme }) => color || theme.card.title.color};
