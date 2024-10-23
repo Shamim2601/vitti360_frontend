@@ -1,18 +1,19 @@
 import React from 'react'
-import { Login as LoginComponent } from '../components'
+import { SignUp as SignupComponent } from '../components/index.js'
 import {Helmet} from "react-helmet";
-function Login() {
+
+function SignUp() {
   return (
     <>
     {/* <Helmet>
-        <title>Blog Login</title>
+        <title>Blog SignUp</title>
         <meta name="description" content="" />
       </Helmet> */}
     <div className='py-8'>
-        <LoginComponent/ >
+        <SignupComponent />
     </div>
     </>
   )
 }
 
-export default Login
+export default SignUp

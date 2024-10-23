@@ -1,38 +1,41 @@
-import './App.css';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Home from './pages/Home';
-import Blogs from './pages/Blogs';
-import Circulars from './pages/Circulars';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
-import Chat from './pages/Chat';
-import Exams from './pages/Exams';
-import BookShop from './pages/BookShop';
-import Support from './pages/Support';
-import Header from './components/Header';
-import { Container } from './styledComponents/common';
+import React, { useState, useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+import authService from './appwrite/auth_service'
+import { login, logout } from './store/authSlice'
+import { Footer, Header } from './components'
+import { Outlet } from 'react-router-dom'
+
 
 function App() {
-  return (
-    <>
-      <Router>
+  const [loading, setLoading] = useState(true)
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    authService.getCurrentUser()
+      .then((userData) => {
+        if (userData) {
+          dispatch(login({ userData }))
+        } else {
+          dispatch(logout())
+        }
+      })
+      .finally(() => setLoading(false))
+  }, [])
+
+  return !loading ? (
+    <div className='min-h-screen flex flex-wrap content-between bg-gray-400'>
+      <div className='w-full block'>
         <Header />
-        <Container>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/blogs" element={<Blogs />} />
-            <Route path="/circulars" element={<Circulars />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/chat" element={<Chat />} />
-            <Route path="/exams" element={<Exams />} />
-            <Route path="/bookshop" element={<BookShop />} />
-            <Route path="/support" element={<Support />} />
-          </Routes>
-        </Container>
-      </Router>
-    </>
-  );
+        <main>
+          <Outlet />
+        </main>
+        <Footer />
+      </div>
+    </div>
+  ) : (null)
 }
 
-export default App;
+
+
+
+export default App
