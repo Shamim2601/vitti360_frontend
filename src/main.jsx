@@ -71,6 +71,15 @@ const router = createBrowserRouter([
             element: <Post />,
         },
         {
+            path: "/support",
+            element: (
+                <AuthLayout authentication>
+                    {" "}
+                    <AllPosts />
+                </AuthLayout>
+            ),
+        },
+        {
             path: "/circular",
             element: (
                 <AuthLayout authentication>

@@ -5,7 +5,16 @@ import { Helmet } from "react-helmet";
 
 function Home() {
 
-    const [posts, setPosts] = useState([])
+    const defaultPost = [
+        {
+            $id: 'default',
+            title: 'Welcome to Vitti360!',
+            featuredImage: '',
+            content: 'This is a default post. Stay tuned for more content coming soon!',
+        }
+    ];
+
+    const [posts, setPosts] = useState(defaultPost)
     useEffect(() => {
         appwriteService.getAllPost()
             .then((posts) => posts ? setPosts(posts.documents) : null)
@@ -31,7 +40,7 @@ function Home() {
                     <Container>
                         <div className="w-full">
                             <h1 className="text-center text-5xl font-bold">
-                                Our Latest Posts
+                                Latest Posts
                             </h1>
                         </div>
                         <div className='flex justify-center gap-5 mt-8 flex-wrap '>

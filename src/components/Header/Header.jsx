@@ -77,7 +77,7 @@ function Header() {
   };
 
   return (
-    <header className='py-3 shadow bg-gray-500'>
+    <header className='pt-2 shadow bg-gray-500'>
       <Container>
         <nav className='flex items-center'>
           {/* Logo */}
