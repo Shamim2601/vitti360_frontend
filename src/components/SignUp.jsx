@@ -5,7 +5,7 @@ import { Button, Input } from "./index"
 import { useDispatch } from "react-redux"
 import authService from "../appwrite/auth_service"
 import { useForm } from "react-hook-form"
-import logo from '../assets/favicon.ico'
+import logo from '/favicon.ico'
 
 function SignUp() {
     const navigate = useNavigate()

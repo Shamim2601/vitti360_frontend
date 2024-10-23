@@ -1,0 +1,11 @@
+# Allow all web crawlers to access the homepage
+User-agent: *
+Allow: /
+
+# Block web crawlers from accessing specific paths (if any sensitive areas exist)
+Disallow: /admin/
+Disallow: /login/
+Disallow: /signup/
+
+# Indicate the location of the sitemap
+Sitemap: https://vitti360.xyz/sitemap.xml

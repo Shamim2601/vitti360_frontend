@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import logo from '../../assets/favicon.ico'
+import logo from '/favicon.ico'
 
 function Footer() {
     return (
