@@ -29,7 +29,7 @@ function Footer() {
                 Social
               </h3> */}
               <div className="flex justify-center space-x-4">
-                <a href="https://api.whatsapp.com/send?phone=+8801789279732" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-gray-900">
+                <a href="https://api.whatsapp.com/send?phone=+8801533749463" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-gray-900">
                   <FaWhatsapp size={24} />
                 </a>
                 <a href="tel:+8801789279732" className="text-gray-600 hover:text-gray-900">
