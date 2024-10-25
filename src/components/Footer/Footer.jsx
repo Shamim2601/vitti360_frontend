@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import logo from "/favicon.ico";
-import { FaWhatsapp, FaPhone, FaFacebook, FaYoutube } from "react-icons/fa";
+import { FaWhatsapp, FaPhone, FaFacebook, FaFacebookMessenger, FaYoutube } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 
 function Footer() {
@@ -32,17 +32,20 @@ function Footer() {
                 <a href="https://api.whatsapp.com/send?phone=+8801789279732" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-gray-900">
                   <FaWhatsapp size={24} />
                 </a>
-                <a href="mailto:kohinurnishi05@gmail.com" className="text-gray-600 hover:text-gray-900">
-                  <MdEmail size={24} />
-                </a>
                 <a href="tel:+8801789279732" className="text-gray-600 hover:text-gray-900">
                   <FaPhone size={24} />
+                </a>
+                <a href="mailto:kohinurnishi05@gmail.com" className="text-gray-600 hover:text-gray-900">
+                  <MdEmail size={24} />
                 </a>
                 <a href="https://www.youtube.com/@samamun60" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-gray-900">
                   <FaYoutube size={24} />
                 </a>
                 <a href="https://www.facebook.com/vitti360" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-gray-900">
                   <FaFacebook size={24} />
+                </a>
+                <a href="https://m.me/samamun60" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-gray-900">
+                  <FaFacebookMessenger size={24} />
                 </a>
               </div>
             </div>
