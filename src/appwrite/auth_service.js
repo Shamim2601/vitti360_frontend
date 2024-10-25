@@ -1,84 +1,63 @@
-
-
-// 1st Appwrite example
-// const client = new Client()
-//     .setEndpoint('https://cloud.appwrite.io/v1') // Your API Endpoint
-//     .setProject('<PROJECT_ID>');               // Your project ID
-
-// const account = new Account(client);
-
-// const promise = account.create('[USER_ID]', 'email@example.com', '');
-
-// promise.then(function (response) {
-//     console.log(response); // Success
-// }, function (error) {
-//     console.log(error); // Failure
-// });
-
-// 2nd Appwrite example
-// Better one
-
-
-
 import conf from '../conf/conf.js';
-import { Client, Account, ID } from "appwrite";
-
+import axios from 'axios';
 
 export class AuthService {
-    client = new Client();
-    account;
-
     constructor() {
-        this.client
-            .setEndpoint(conf.appwriteUrl)
-            .setProject(conf.appwriteProjectId);
-        this.account = new Account(this.client);
-            
+        this.apiUrl = conf.apiUrl;
     }
 
-    async createAccount({email, password, name}) {
+    async createAccount({ name, email, phone, password }) {
         try {
-            const userAccount = await this.account.create(ID.unique(), email, password, name);
-            if (userAccount) {
-                // call another method
-                return this.login({email, password});
-            } else {
-               return  userAccount;
-            }
+            const response = await axios.post(`${this.apiUrl}/signup/`, {
+                name,
+                email,
+                phone,
+                password,
+            });
+            return response.data;
         } catch (error) {
-            throw error;
+            throw error.response ? error.response.data : error;
         }
     }
 
-    async login({email, password}) {
+    async login({ email, password }) {
         try {
-            return await this.account.createEmailSession(email, password);
+            const response = await axios.post(`${this.apiUrl}/login/`, {
+                email,
+                password,
+            });
+            return response.data;
         } catch (error) {
-            throw error;
+            throw error.response ? error.response.data : error;
         }
     }
 
     async getCurrentUser() {
         try {
-            return await this.account.get();
+            const response = await axios.get(`${this.apiUrl}/current_user/`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                },
+            });
+            return response.data;
         } catch (error) {
-            console.log("Appwrite serive :: getCurrentUser :: error", error);
+            throw error.response ? error.response.data : error;
         }
-
-        return null;
     }
 
     async logout() {
-
         try {
-            await this.account.deleteSessions();
+            await axios.post(`${this.apiUrl}/logout/`, null, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                },
+            });
         } catch (error) {
-            console.log("Appwrite serive :: logout :: error", error);
+            throw error.response ? error.response.data : error;
         }
     }
 }
 
 const authService = new AuthService();
 
-export default authService
-
+export default authService;

@@ -26,32 +26,32 @@ function Header() {
     {
       name: 'Login',
       slug: '/login',
-      active: authStatus,
+      active: !authStatus,
     },
     {
       name: 'Signup',
       slug: '/signup',
-      active: authStatus,
+      active: !authStatus,
     },
     {
       name: 'Support',
       slug: '/support',
-      active: !authStatus,
+      active: authStatus,
     },
     {
       name: 'Circular',
       slug: '/circular',
-      active: !authStatus,
+      active: authStatus,
     },
     {
       name: 'All Posts',
       slug: '/all-posts',
-      active: !authStatus,
+      active: authStatus,
     },
     {
       name: 'Add Post',
       slug: '/add-post',
-      active: !authStatus,
+      active: authStatus,
     },
   ];
 
@@ -103,7 +103,7 @@ function Header() {
             )}
 
             {/* Dropdown for more items and Logout, visible only if authStatus is true */}
-            {!authStatus && (
+            {authStatus && (
               <li className='relative'>
                 {/* Toggle dropdown on FaBars click */}
                 <button
