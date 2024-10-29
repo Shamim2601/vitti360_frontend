@@ -79,11 +79,6 @@ function Login() {
                             className='w-full'
                         >Sign In</Button>
                     </div>
-                    <div>
-                        Demo Account: <br />
-                        Email: demo@example.com <br />
-                        Password: 12345678
-                    </div>
                 </form>
             </div>
         </div>
