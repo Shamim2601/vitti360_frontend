@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { login as authLogin } from '../store/authSlice'
 import { Button, Input } from "./index"
 import { useDispatch } from "react-redux"
-import authService from "../appwrite/auth_service"
+import authService from "../services/auth_service"
 import { useForm } from "react-hook-form"
 import logo from '/favicon.ico'
 
@@ -27,7 +27,6 @@ function SignUp() {
             }
         } catch (error) {
             setError(error.message)
-
         }
     }
 
@@ -39,7 +38,7 @@ function SignUp() {
                         <img src={logo} alt="logo" className=' w-12' />
                     </span>
                 </div>
-                <h2 className="text-center text-2xl font-bold leading-tight">Sign up to create account</h2>
+                <h2 className="text-center text-2xl font-bold leading-tight">Sign up to create an account</h2>
                 <p className="mt-2 text-center text-base text-black/60">
                     Already have an account?&nbsp;
                     <Link
@@ -69,9 +68,17 @@ function SignUp() {
                             {...register("email", {
                                 required: true,
                                 validate: {
-                                    matchPatern: (value) => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) ||
+                                    matchPattern: (value) => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) ||
                                         "Email address must be a valid address",
                                 }
+                            })}
+                        />
+                        <Input
+                            label="Username: "
+                            placeholder="Enter your username"
+                            type="text"
+                            {...register("username", {
+                                required: true,
                             })}
                         />
                         <Input
@@ -90,9 +97,7 @@ function SignUp() {
                         </Button>
                     </div>
                 </form>
-
             </div>
-
         </div>
     )
 }

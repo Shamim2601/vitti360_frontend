@@ -6,12 +6,12 @@ export class AuthService {
         this.apiUrl = conf.apiUrl;
     }
 
-    async createAccount({ name, email, phone, password }) {
+    async createAccount({ name, email, username, password }) {
         try {
             const response = await axios.post(`${this.apiUrl}/signup/`, {
                 name,
                 email,
-                phone,
+                username,
                 password,
             });
             return response.data;
@@ -20,12 +20,14 @@ export class AuthService {
         }
     }
 
-    async login({ email, password }) {
+    async login({ username, password }) {
         try {
             const response = await axios.post(`${this.apiUrl}/login/`, {
-                email,
+                username,
                 password,
             });
+            const token = response.data.token;
+            localStorage.setItem('token', token);
             return response.data;
         } catch (error) {
             throw error.response ? error.response.data : error;
@@ -52,6 +54,7 @@ export class AuthService {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
             });
+						localStorage.removeItem('token');
         } catch (error) {
             throw error.response ? error.response.data : error;
         }

@@ -1,17 +1,10 @@
 import React from 'react'
-import { Login as LoginComponent } from '../components'
-import {Helmet} from "react-helmet";
+import { Login } from '../components'
 function Login() {
   return (
-    <>
-    {/* <Helmet>
-        <title>Blog Login</title>
-        <meta name="description" content="" />
-      </Helmet> */}
     <div className='py-8'>
-        <LoginComponent/ >
+        <Login />
     </div>
-    </>
   )
 }
 
