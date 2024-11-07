@@ -5,7 +5,7 @@ import Container from "./container/Container";
 import Button from "./Button";
 import Input from "./Input";
 import SignUp from "./SignUp";
-import Login from "./Login";
+import LoginComp from "./LoginComp";
 import Select from "./Select";
 import PostCard from "./PostCard";
 import RTE from "./RTE";
@@ -19,7 +19,7 @@ export {
     Button,
     Input,
     SignUp,
-    Login,
+    LoginComp,
     Select,
     PostCard,
     RTE,

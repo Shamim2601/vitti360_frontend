@@ -1,5 +1,5 @@
 import React from 'react';
-import service from '../appwrite/config';
+import service from '../services/config';
 import { Link } from 'react-router-dom';
 import parse from 'html-react-parser';
 

@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { FaBars } from 'react-icons/fa'; // Import FontAwesome Bars icon
 import logo from '/favicon.ico';
-import authService from '../../appwrite/auth_service';
+import authService from '../../services/auth_service';
 import { logout } from '../../store/authSlice';
 
 function Header() {

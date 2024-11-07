@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Container, PostCard } from '../components/index'
-import appwriteService from '../appwrite/config'
+import appwriteService from '../services/config'
 import { Helmet } from "react-helmet";
 
 function Home() {
