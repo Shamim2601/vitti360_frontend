@@ -27,7 +27,9 @@ export class AuthService {
                 password,
             });
             const token = response.data.access;
+            const refresh = response.data.refresh;
             localStorage.setItem('token', token);
+            localStorage.setItem('refresh', refresh);
             return response.data;
         } catch (error) {
             throw error.response ? error.response.data : error;
@@ -49,16 +51,18 @@ export class AuthService {
 
     async logout() {
         try {
-            await axios.post(`${this.apiUrl}/logout/`, null, {
+            const refreshToken = localStorage.getItem('refresh');
+            await axios.post(`${this.apiUrl}/auth/logout/`, { refresh: refreshToken }, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
             });
-						localStorage.removeItem('token');
+            localStorage.removeItem('token');
+            localStorage.removeItem('refresh');
         } catch (error) {
             throw error.response ? error.response.data : error;
         }
-    }
+    }    
 }
 
 const authService = new AuthService();

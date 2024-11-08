@@ -3,7 +3,7 @@ import { Container } from '../index';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { FaBars } from 'react-icons/fa'; // Import FontAwesome Bars icon
+import { FaBars } from 'react-icons/fa';
 import logo from '/favicon.ico';
 import authService from '../../services/auth_service';
 import { logout } from '../../store/authSlice';
@@ -19,8 +19,8 @@ function Header() {
   // Navigation items
   const navItems = [
     {
-      name: 'Home',
-      slug: '/',
+      name: 'Support',
+      slug: '/support',
       active: true
     },
     {
@@ -34,9 +34,9 @@ function Header() {
       active: !authStatus,
     },
     {
-      name: 'Support',
-      slug: '/support',
-      active: authStatus,
+      name: 'Home',
+      slug: '/',
+      active: true,
     },
     {
       name: 'Circular',
@@ -44,20 +44,16 @@ function Header() {
       active: authStatus,
     },
     {
-      name: 'All Posts',
-      slug: '/all-posts',
-      active: authStatus,
-    },
-    {
-      name: 'Add Post',
-      slug: '/add-post',
+      name: 'Blogs',
+      slug: '/blogs',
       active: authStatus,
     },
   ];
 
   // Filter nav items that should go inside the dropdown
   const dropdownItems = navItems.filter(item =>
-    item.slug !== '/' && item.slug !== '/login' && item.slug !== '/signup' && item.slug !== '/support'
+    item.slug !== '/support' && item.slug !== '/login' && item.slug !== '/signup'
+    && item.slug !== '/circular' && item.slug !== '/blogs'
   );
 
   // Logout handler function
@@ -80,21 +76,22 @@ function Header() {
     <header className='pt-2 shadow bg-gray-500'>
       <Container>
         <nav className='flex items-center'>
-          {/* Logo */}
           <div className='mr-4'>
             <Link to='/'>
               <img src={logo} alt="logo" className='w-12' />
             </Link>
           </div>
 
-          {/* Main navigation */}
           <ul className='flex ml-auto'>
             {navItems.map((item) =>
-              item.active && (item.slug === '/' || item.slug === '/login' || item.slug === '/signup' || item.slug === '/support') ? (
-                <li key={item.name} className='mr-4'>
+              item.active && (item.slug === '/support' 
+                || item.slug === '/login' || item.slug === '/signup'
+                || item.slug==='/circular' || item.slug==='/blogs'
+              ) ? (
+                <li key={item.name} className='mr-2'>
                   <button
                     onClick={() => navigate(item.slug)}
-                    className='inline-block px-6 py-2 duration-200 hover:bg-blue-100 rounded-full'
+                    className='inline-block px-2 py-2 duration-200 hover:bg-blue-100 rounded-full'
                   >
                     {item.name}
                   </button>
@@ -102,18 +99,15 @@ function Header() {
               ) : null
             )}
 
-            {/* Dropdown for more items and Logout, visible only if authStatus is true */}
             {authStatus && (
               <li className='relative'>
-                {/* Toggle dropdown on FaBars click */}
                 <button
                   onClick={toggleDropdown}
                   className='inline-block px-6 py-2 duration-200 hover:bg-blue-100 rounded-full'
                 >
-                  <FaBars className='inline text-xl' /> {/* Dropdown icon */}
+                  <FaBars className='inline text-xl' />
                 </button>
 
-                {/* Dropdown content */}
                 {isDropdownOpen && (
                   <ul className='absolute right-0 mt-2 bg-white shadow-lg rounded-lg w-48 z-10'>
                     {dropdownItems.map(item => (
@@ -122,7 +116,7 @@ function Header() {
                           <button
                             onClick={() => {
                               navigate(item.slug);
-                              setDropdownOpen(false); // Close dropdown after navigating
+                              setDropdownOpen(false);
                             }}
                             className='block px-4 py-2 w-full text-left hover:bg-blue-100 rounded-t'
                           >
@@ -132,12 +126,11 @@ function Header() {
                       )
                     ))}
 
-                    {/* Logout button inside dropdown */}
                     <li>
                       <button
                         onClick={() => {
                           logoutHandler();
-                          setDropdownOpen(false); // Close dropdown after logout
+                          setDropdownOpen(false);
                         }}
                         className='block px-4 py-2 w-full text-left hover:bg-red-100 rounded-t'
                       >

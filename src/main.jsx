@@ -13,6 +13,7 @@ import AllPosts from './pages/AllPosts.jsx'
 import AddPost from './pages/AddPost.jsx'
 import EditPost from './pages/EditPost.jsx'
 import Post from './pages/Post.jsx'
+import Support from './pages/Support.jsx'
 
 const router = createBrowserRouter([
   {
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
         {
             path: "",
             element: <Home />,
+        },
+        {
+            path: "/support",
+            element: <Support />,
         },
         {
             path: "/login",
@@ -40,7 +45,7 @@ const router = createBrowserRouter([
             ),
         },
         {
-            path: "/all-posts",
+            path: "/blogs",
             element: (
                 <AuthLayout authentication>
                     {" "}
@@ -69,15 +74,6 @@ const router = createBrowserRouter([
         {
             path: "/post/:slug",
             element: <Post />,
-        },
-        {
-            path: "/support",
-            element: (
-                <AuthLayout authentication>
-                    {" "}
-                    <AllPosts />
-                </AuthLayout>
-            ),
         },
         {
             path: "/circular",
