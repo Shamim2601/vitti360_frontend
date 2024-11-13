@@ -29,7 +29,7 @@ function App() {
       </div>
       
       {/* Main Content with padding-top to prevent overlap with header */}
-      <div className="w-full pt-16"> {/* Adjust pt-16 based on the header height */}
+      <div className="w-full pt-12"> {/* Adjust pt-16 based on the header height */}
         <main>
           <Outlet />
         </main>

@@ -53,6 +53,16 @@ function Header() {
       slug: '/blogs',
       active: authStatus,
     },
+    {
+      name: 'Bookshop',
+      slug: '/bookshop',
+      active: authStatus,
+    },
+    {
+      name: 'Exams',
+      slug: '/exams',
+      active: authStatus,
+    },
   ];
 
   // Filter nav items that should go inside the dropdown
@@ -83,7 +93,7 @@ function Header() {
         <nav className='flex items-center'>
           <div className='mr-4'>
             <Link to='/'>
-              <img src={logo} alt="logo" className='w-12' />
+              <img src={logo} alt="logo" className='w-12 mb-1' />
             </Link>
           </div>
 

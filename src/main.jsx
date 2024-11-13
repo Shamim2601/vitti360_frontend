@@ -9,11 +9,12 @@ import Home from './pages/Home.jsx'
 import { AuthLayout } from './components/index.js'
 import Login from './pages/Login.jsx'
 import SignUp from './pages/SignUp.jsx'
-import AllPosts from './pages/AllPosts.jsx'
-import AddPost from './pages/AddPost.jsx'
-import EditPost from './pages/EditPost.jsx'
-import Post from './pages/Post.jsx'
 import Support from './pages/Support.jsx'
+import Forum from './pages/Forum.jsx'
+import Circulars from './pages/Circulars.jsx'
+import Blogs from './pages/Blogs.jsx'
+import Bookshop from './pages/Bookshop.jsx'
+import Exams from './pages/Exams.jsx'
 
 const router = createBrowserRouter([
   {
@@ -49,7 +50,7 @@ const router = createBrowserRouter([
             element: (
                 <AuthLayout authentication>
                     {" "}
-                    <AllPosts />
+                    <Forum />
                 </AuthLayout>
             ),
         },
@@ -58,41 +59,36 @@ const router = createBrowserRouter([
             element: (
                 <AuthLayout authentication>
                     {" "}
-                    <AllPosts />
+                    <Circulars />
                 </AuthLayout>
             ),
         },
-        ,
         {
             path: "/blogs",
             element: (
                 <AuthLayout authentication>
                     {" "}
-                    <AllPosts />
+                    <Blogs />
                 </AuthLayout>
             ),
         },
         {
-            path: "/add-post",
+            path: "/bookshop",
             element: (
                 <AuthLayout authentication>
                     {" "}
-                    <AddPost />
+                    <Bookshop />
                 </AuthLayout>
             ),
         },
         {
-            path: "/edit-post/:slug",
+            path: "/exams",
             element: (
                 <AuthLayout authentication>
                     {" "}
-                    <EditPost />
+                    <Exams />
                 </AuthLayout>
             ),
-        },
-        {
-            path: "/post/:slug",
-            element: <Post />,
         },
     ],
 },
