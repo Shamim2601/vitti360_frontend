@@ -11,19 +11,16 @@ function SignUp() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const [error, setError] = useState("")
+    const [showPassword, setShowPassword] = useState(false)
 
-    const { register, handleSubmit } = useForm()
+    const { register, handleSubmit, formState: { errors } } = useForm()
 
     const signUp = async (data) => {
         setError("")
         try {
             const userData = await authService.createAccount(data)
             if (userData) {
-                const userData = await authService.getCurrentUser()
-                if (userData) {
-                    dispatch(authLogin(userData));
-                    navigate("/")
-                }
+                navigate("/login")
             }
         } catch (error) {
             setError(error.message)
@@ -32,10 +29,10 @@ function SignUp() {
 
     return (
         <div className="flex items-center justify-center">
-            <div className={`mx-auto w-full max-w-lg bg-gray-100 rounded-xl p-10 border border-black/10`}>
+            <div className="mx-auto w-full max-w-lg bg-gray-100 rounded-xl p-10 border border-black/10">
                 <div className="mb-2 flex justify-center">
                     <span className="inline-block w-full max-w-[100px]">
-                        <img src={logo} alt="logo" className=' w-12' />
+                        <img src={logo} alt="logo" className='w-12' />
                     </span>
                 </div>
                 <h2 className="text-center text-2xl font-bold leading-tight">Sign up to create an account</h2>
@@ -45,54 +42,72 @@ function SignUp() {
                         to="/login"
                         className="font-medium text-primary transition-all duration-200 hover:underline"
                     >
-                        Sign In
+                        Login
                     </Link>
                 </p>
                 {error && <p className="text-red-600 mt-8 text-center">{error}</p>}
-                <form
-                    onSubmit={handleSubmit(signUp)}
-                >
+                <form onSubmit={handleSubmit(signUp)}>
                     <div className='space-y-5'>
                         <Input
-                            label="Name: "
-                            placeholder="Enter your full name"
+                            label={<span>Name <span className="text-red-500">*</span></span>}
+                            placeholder="নাম"
                             type="text"
-                            {...register("first_name", {
-                                required: true,
-                            })}
+                            {...register("first_name", { required: "Name is required" })}
                         />
+                        {errors.first_name && <p className="text-red-600">{errors.first_name.message}</p>}
+
                         <Input
-                            label="Email: "
-                            placeholder="Enter your email"
+                            label="Email"
+                            placeholder="ইমেইল"
                             type="email"
                             {...register("email", {
-                                required: true,
                                 validate: {
-                                    matchPattern: (value) => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) ||
+                                    matchPattern: (value) =>
+                                        value === "" || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) ||
                                         "Email address must be a valid address",
                                 }
                             })}
                         />
+                        {errors.email && <p className="text-red-600">{errors.email.message}</p>}
+
                         <Input
-                            label="Phone: "
-                            placeholder="Enter your phone number"
+                            label={<span>Phone <span className="text-red-500">*</span></span>}
+                            placeholder="ফোন নাম্বার (11 digits)"
                             type="text"
                             {...register("username", {
-                                required: true,
+                                required: "Phone number is required",
+                                validate: {
+                                    isValidPhoneNumber: (value) => 
+                                        /^0\d{10}$/.test(value) || "Phone number must be 11 digits, start with 0, and contain only numbers",
+                                }
                             })}
                         />
-                        <Input
-                            label="Password: "
-                            placeholder="Enter your password"
-                            type="password"
-                            {...register("password", {
-                                required: true,
-                            })}
-                        />
-                        <Button
-                            type="submit"
-                            className='w-full bg-slate-600'
-                        >
+                        {errors.username && <p className="text-red-600">{errors.username.message}</p>}
+
+                        <div>
+                            <Input
+                                label={<span>Password <span className="text-red-500">*</span></span>}
+                                placeholder="পাসওয়ার্ড"
+                                type={showPassword ? "text" : "password"}
+                                {...register("password", { required: "Password is required" })}
+                            />
+                            {errors.password && <p className="text-red-600">{errors.password.message}</p>}
+
+                            <div className="flex items-center mt-2">
+                                <input
+                                    type="checkbox"
+                                    id="show-password"
+                                    checked={showPassword}
+                                    onChange={() => setShowPassword(!showPassword)}
+                                    className="mr-2"
+                                />
+                                <label htmlFor="show-password" className="text-sm text-black/60">
+                                    Show Password
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <Button type="submit" className='w-full bg-slate-600'>
                             Sign Up
                         </Button>
                     </div>

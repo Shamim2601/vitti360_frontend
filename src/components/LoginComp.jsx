@@ -49,8 +49,8 @@ function LoginComp() {
                 <form onSubmit={handleSubmit(login)} className='mt-8'>
                     <div className='space-y-5'>
                         <Input
-                            label="Username: "
-                            placeholder="Enter your username"
+                            label="Phone: "
+                            placeholder="ফোন নাম্বার"
                             type="text"
                             {...register("username", {
                                 required: true,
@@ -58,14 +58,14 @@ function LoginComp() {
                         />
                         <Input
                             label="Password: "
-                            placeholder="Enter your password"
+                            placeholder="পাসওয়ার্ড"
                             type="password"
                             {...register("password", {
                                 required: true,
                             })}
                         />
-                        <Button type='submit' className='w-full'>
-                            Sign In
+                        <Button type='submit' className='w-full bg-slate-600'>
+                            Login
                         </Button>
                     </div>
                 </form>

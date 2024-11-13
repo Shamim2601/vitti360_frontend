@@ -45,6 +45,25 @@ const router = createBrowserRouter([
             ),
         },
         {
+            path: "/forum",
+            element: (
+                <AuthLayout authentication>
+                    {" "}
+                    <AllPosts />
+                </AuthLayout>
+            ),
+        },
+        {
+            path: "/circulars",
+            element: (
+                <AuthLayout authentication>
+                    {" "}
+                    <AllPosts />
+                </AuthLayout>
+            ),
+        },
+        ,
+        {
             path: "/blogs",
             element: (
                 <AuthLayout authentication>
@@ -74,15 +93,6 @@ const router = createBrowserRouter([
         {
             path: "/post/:slug",
             element: <Post />,
-        },
-        {
-            path: "/circular",
-            element: (
-                <AuthLayout authentication>
-                    {" "}
-                    <AllPosts />
-                </AuthLayout>
-            ),
         },
     ],
 },

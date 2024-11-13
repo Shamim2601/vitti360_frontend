@@ -16,7 +16,7 @@ function Footer() {
               </div> */}
               <div>
                 <p className="text-sm text-gray-600">
-                  &copy; Copyright 2024. All Rights Reserved by <strong>Vitti360</strong>.
+                  &copy; Copyright 2024. All Rights Reserved by <Link to={'/'}><strong>Vitti360</strong></Link>.
                 </p>
               </div>
             </div>

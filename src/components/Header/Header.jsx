@@ -39,8 +39,13 @@ function Header() {
       active: true,
     },
     {
-      name: 'Circular',
-      slug: '/circular',
+      name: 'Circulars',
+      slug: '/circulars',
+      active: authStatus,
+    },
+    {
+      name: 'Forum',
+      slug: '/forum',
       active: authStatus,
     },
     {
@@ -53,7 +58,7 @@ function Header() {
   // Filter nav items that should go inside the dropdown
   const dropdownItems = navItems.filter(item =>
     item.slug !== '/support' && item.slug !== '/login' && item.slug !== '/signup'
-    && item.slug !== '/circular' && item.slug !== '/blogs'
+    && item.slug !== '/circulars' && item.slug !== '/forum'
   );
 
   // Logout handler function
@@ -86,7 +91,7 @@ function Header() {
             {navItems.map((item) =>
               item.active && (item.slug === '/support' 
                 || item.slug === '/login' || item.slug === '/signup'
-                || item.slug==='/circular' || item.slug==='/blogs'
+                || item.slug==='/circulars' || item.slug==='/forum'
               ) ? (
                 <li key={item.name} className='mr-2'>
                   <button
