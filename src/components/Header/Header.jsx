@@ -63,6 +63,11 @@ function Header() {
       slug: '/exams',
       active: authStatus,
     },
+    {
+      name: 'Dashboard',
+      slug: '/dashboard',
+      active: authStatus,
+    },
   ];
 
   // Filter nav items that should go inside the dropdown

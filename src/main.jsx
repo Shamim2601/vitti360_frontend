@@ -15,6 +15,7 @@ import Circulars from './pages/Circulars.jsx'
 import Blogs from './pages/Blogs.jsx'
 import Bookshop from './pages/Bookshop.jsx'
 import Exams from './pages/Exams.jsx'
+import Dashboard from './pages/Dashboard.jsx'
 
 const router = createBrowserRouter([
   {
@@ -87,6 +88,15 @@ const router = createBrowserRouter([
                 <AuthLayout authentication>
                     {" "}
                     <Exams />
+                </AuthLayout>
+            ),
+        },
+        {
+            path: "/dashboard",
+            element: (
+                <AuthLayout authentication>
+                    {" "}
+                    <Dashboard />
                 </AuthLayout>
             ),
         },
