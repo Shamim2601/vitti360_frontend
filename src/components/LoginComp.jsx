@@ -50,7 +50,7 @@ function LoginComp() {
                     <div className='space-y-5'>
                         <Input
                             label="Phone: "
-                            placeholder="ফোন নাম্বার"
+                            placeholder="ফোন নাম্বার (11 digits)"
                             type="text"
                             {...register("username", {
                                 required: true,
@@ -67,6 +67,8 @@ function LoginComp() {
                         <Button type='submit' className='w-full bg-slate-600'>
                             Login
                         </Button>
+
+                        <a href="/support" className="mt-4 block text-right text-sm text-blue-500 hover:underline"><h6>Forgot password?</h6></a>
                     </div>
                 </form>
             </div>

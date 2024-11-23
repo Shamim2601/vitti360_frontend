@@ -7,7 +7,7 @@ import authService from "../services/auth_service"
 import { useForm } from "react-hook-form"
 import logo from '/favicon.ico'
 
-function SignUp() {
+function SignUpComp() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const [error, setError] = useState("")
@@ -117,4 +117,4 @@ function SignUp() {
     )
 }
 
-export default SignUp
+export default SignUpComp

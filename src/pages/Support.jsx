@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 
 const Support = () => {
   const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
   const [category, setCategory] = useState('job');
   const [message, setMessage] = useState('');
   const [needFormFillup, setNeedFormFillup] = useState(false);
@@ -18,7 +19,7 @@ const Support = () => {
   }, [location]);
 
   const generateMessage = () => {
-    return `Hello, my name is ${name}. I need help with ${category}.${needFormFillup ? ' I need support for form fillup.' : ''} Here is my message: ${message}`;
+    return `Hello, my name is ${name}. My phone number is ${phone}. I need help with ${category}.${needFormFillup ? ' I need support for form fillup.' : ''} Here is my message: ${message}`;
   };
 
   const contactInfo = {
@@ -71,7 +72,6 @@ const Support = () => {
     }
   };
 
-
   return (
     <div className="my-8 mx-auto p-6 max-w-lg bg-white shadow-lg rounded-lg">
       <h1 className="text-2xl font-bold mb-4">Admission and Job Support</h1>
@@ -85,6 +85,17 @@ const Support = () => {
             onChange={(e) => setName(e.target.value)}
             className="w-full p-2 border rounded"
             placeholder="আপনার নাম লিখুন"
+          />
+        </div>
+        <div>
+          <label className="block font-semibold mb-1" htmlFor="phone">Phone Number:</label>
+          <input
+            type="text"
+            id="phone"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            className="w-full p-2 border rounded"
+            placeholder="আপনার ফোন নম্বর লিখুন"
           />
         </div>
         <div className="flex items-center space-x-4">
