@@ -123,7 +123,7 @@ const Support = () => {
         </div>
         <div className="flex items-center">
           <label htmlFor="formFillup" className="mr-4">
-            ফর্ম ফিলাপ করতে চাইলে এখানে টিক দিন
+            ফর্ম ফিলাপ সহায়তার জন্য এখানে টিক দিন
           </label>
           <input
             type="checkbox"

@@ -21,7 +21,7 @@ function App() {
       .finally(() => setLoading(false));
   }, []);
 
-  return !loading ? (
+  return (
     <div className="min-h-screen flex flex-wrap content-between bg-gray-400">
       {/* Fixed Header Container */}
       <div className="fixed top-0 left-0 w-full z-50">
@@ -38,7 +38,7 @@ function App() {
       {/* Footer */}
       <Footer />
     </div>
-  ) : null;
+  );
 }
 
 export default App;
