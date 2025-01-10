@@ -1,5 +1,5 @@
 const conf = {
-    apiUrl: "https://vitti360-backend.onrender.com",
+    apiUrl: "https://vitti360-backend-7s08.onrender.com",
     // apiUrl: "http://127.0.0.1:8000",
     appwriteUrl: String(import.meta.env.VITE_APPWRITE_URL),
     appwriteProjectId: String(import.meta.env.VITE_APPWRITE_PROJECT_ID),
