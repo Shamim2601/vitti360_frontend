@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../store/authSlice";
+import authService from "../services/auth_service";
 import { useNavigate } from "react-router-dom";
 import conf from "../conf/conf";
 import axios from "axios";
@@ -32,14 +33,14 @@ const Dashboard = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleLogout = async () => {
-    try {
-      await authService.logout();
-      dispatch(logout());
-      navigate("/login");
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
+  const handleLogout = () => {
+    authService.logout()
+      .then(() => {
+        dispatch(logout());
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
 
   const handleFormToggle = (type) => {
