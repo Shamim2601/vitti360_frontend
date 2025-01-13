@@ -5,7 +5,7 @@ import authService from "../services/auth_service";
 import { useNavigate } from "react-router-dom";
 import conf from "../conf/conf";
 import axios from "axios";
-import { FiMenu, FiX, FiHome, FiUser, FiLogOut, FiEdit, FiPlusCircle, FiBook, FiFileText } from 'react-icons/fi';
+import { FiMenu, FiX, FiHome, FiUser, FiLogOut, FiEdit, FiPlusCircle, FiBook, FiFileText, FiTrash2 } from 'react-icons/fi';
 
 // Reusable Button Component with icon support
 const Button = ({ children, onClick, className, type = "button", icon: Icon }) => (
@@ -31,6 +31,20 @@ const Dashboard = () => {
   });
   const [users, setUsers] = useState([]);
   const [showUsersModal, setShowUsersModal] = useState(false);
+  const [showExamForm, setShowExamForm] = useState(false);
+  const [examFormData, setExamFormData] = useState({
+    title: "",
+    duration: "",
+    category: "",
+    questions: [
+      {
+        question: "",
+        options: ["", "", "", ""],
+        answer: "",
+        explanation: ""
+      }
+    ]
+  });
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -86,6 +100,77 @@ const Dashboard = () => {
       console.error("Failed to fetch users:", error);
       alert("Failed to load users");
     }
+  };
+
+  const handleExamFormSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem("token");
+      await axios.post(`${conf.apiUrl}/api/exams`, examFormData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      });
+      alert("Exam added successfully!");
+      setShowExamForm(false);
+      setExamFormData({
+        title: "",
+        duration: "",
+        category: "",
+        questions: [
+          {
+            question: "",
+            options: ["", "", "", ""],
+            answer: "",
+            explanation: ""
+          }
+        ]
+      });
+    } catch (error) {
+      console.error("Failed to create exam:", error);
+      alert("Failed to create exam. Please try again.");
+    }
+  };
+
+  const handleQuestionChange = (index, field, value) => {
+    setExamFormData(prev => {
+      const newQuestions = [...prev.questions];
+      newQuestions[index] = {
+        ...newQuestions[index],
+        [field]: value
+      };
+      return { ...prev, questions: newQuestions };
+    });
+  };
+
+  const handleOptionChange = (questionIndex, optionIndex, value) => {
+    setExamFormData(prev => {
+      const newQuestions = [...prev.questions];
+      newQuestions[questionIndex].options[optionIndex] = value;
+      return { ...prev, questions: newQuestions };
+    });
+  };
+
+  const addQuestion = () => {
+    setExamFormData(prev => ({
+      ...prev,
+      questions: [
+        ...prev.questions,
+        {
+          question: "",
+          options: ["", "", "", ""],
+          answer: "",
+          explanation: ""
+        }
+      ]
+    }));
+  };
+
+  const deleteQuestion = (indexToDelete) => {
+    setExamFormData(prev => ({
+      ...prev,
+      questions: prev.questions.filter((_, index) => index !== indexToDelete)
+    }));
   };
 
   if (!userData) {
@@ -233,6 +318,13 @@ const Dashboard = () => {
                   >
                     Add Circular
                   </Button>
+                  <Button
+                    onClick={() => setShowExamForm(true)}
+                    className="w-full justify-center bg-purple-600 hover:bg-purple-700"
+                    icon={FiBook}
+                  >
+                    Add New Exam
+                  </Button>
                 </>
               )}
             </div>
@@ -346,6 +438,150 @@ const Dashboard = () => {
                   >
                     Cancel
                   </Button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* Exam Form Modal */}
+        {showExamForm && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-4xl mx-4 max-h-[90vh] overflow-y-auto">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-xl font-semibold text-gray-800">Create New Exam</h3>
+                <button
+                  onClick={() => setShowExamForm(false)}
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  ✕
+                </button>
+              </div>
+              <form onSubmit={handleExamFormSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-gray-700 mb-2">Title</label>
+                    <input
+                      type="text"
+                      value={examFormData.title}
+                      onChange={(e) => setExamFormData(prev => ({ ...prev, title: e.target.value }))}
+                      className="w-full px-4 py-2 border rounded-lg"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-700 mb-2">Duration (minutes)</label>
+                    <input
+                      type="number"
+                      value={examFormData.duration}
+                      onChange={(e) => setExamFormData(prev => ({ ...prev, duration: e.target.value }))}
+                      className="w-full px-4 py-2 border rounded-lg"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-700 mb-2">Category</label>
+                    <input
+                      type="text"
+                      value={examFormData.category}
+                      onChange={(e) => setExamFormData(prev => ({ ...prev, category: e.target.value }))}
+                      className="w-full px-4 py-2 border rounded-lg"
+                      required
+                    />
+                  </div>
+                </div>
+
+                {examFormData.questions.map((question, qIndex) => (
+                  <div key={qIndex} className="border-t pt-6">
+                    <div className="flex justify-between items-center mb-4">
+                      <h4 className="font-medium">Question {qIndex + 1}</h4>
+                      {examFormData.questions.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => deleteQuestion(qIndex)}
+                          className="text-red-500 hover:text-red-700 flex items-center gap-2"
+                        >
+                          <FiTrash2 /> Delete
+                        </button>
+                      )}
+                    </div>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-gray-700 mb-2">Question Text</label>
+                        <input
+                          type="text"
+                          value={question.question}
+                          onChange={(e) => handleQuestionChange(qIndex, 'question', e.target.value)}
+                          className="w-full px-4 py-2 border rounded-lg"
+                          required
+                        />
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {question.options.map((option, oIndex) => (
+                          <div key={oIndex}>
+                            <label className="block text-gray-700 mb-2">Option {oIndex + 1}</label>
+                            <input
+                              type="text"
+                              value={option}
+                              onChange={(e) => handleOptionChange(qIndex, oIndex, e.target.value)}
+                              className="w-full px-4 py-2 border rounded-lg"
+                              required
+                            />
+                          </div>
+                        ))}
+                      </div>
+                      <div>
+                        <label className="block text-gray-700 mb-2">Correct Answer</label>
+                        <select
+                          value={question.answer}
+                          onChange={(e) => handleQuestionChange(qIndex, 'answer', e.target.value)}
+                          className="w-full px-4 py-2 border rounded-lg"
+                          required
+                        >
+                          <option value="">Select correct answer</option>
+                          {question.options.map((option, index) => (
+                            <option key={index} value={option}>{option}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-gray-700 mb-2">Explanation</label>
+                        <textarea
+                          value={question.explanation}
+                          onChange={(e) => handleQuestionChange(qIndex, 'explanation', e.target.value)}
+                          className="w-full px-4 py-2 border rounded-lg"
+                          rows="2"
+                          required
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+
+                <div className="flex justify-between">
+                  <Button
+                    type="button"
+                    onClick={addQuestion}
+                    className="bg-green-600 hover:bg-green-700"
+                    icon={FiPlusCircle}
+                  >
+                    Add Question
+                  </Button>
+                  <div className="space-x-4">
+                    <Button
+                      type="submit"
+                      className="bg-blue-600 hover:bg-blue-700"
+                    >
+                      Create Exam
+                    </Button>
+                    <Button
+                      type="button"
+                      onClick={() => setShowExamForm(false)}
+                      className="bg-gray-600 hover:bg-gray-700"
+                    >
+                      Cancel
+                    </Button>
+                  </div>
                 </div>
               </form>
             </div>
