@@ -10,10 +10,15 @@ const EditProfile = () => {
     const userData = useSelector((state) => state.auth.userData);
     const [formData, setFormData] = useState({
         first_name: userData.first_name || '',
-        last_name: userData.last_name || '',
         email: userData.email || '',
         username: userData.username || '',
+        password: '', // Add password field
     });
+    const [showPassword, setShowPassword] = useState(false); // Add state for showing password
+
+    const toggleShowPassword = () => {
+        setShowPassword((prev) => !prev);
+    };
 
     const handleChange = (e) => {
         setFormData({
@@ -33,21 +38,11 @@ const EditProfile = () => {
             <h2 className="text-2xl font-semibold mb-4">Edit Profile</h2>
             <form onSubmit={handleSubmit}>
                 <div className="mb-4">
-                    <label className="block text-gray-700">First Name</label>
+                    <label className="block text-gray-700">Full Name</label>
                     <input
                         type="text"
                         name="first_name"
                         value={formData.first_name}
-                        onChange={handleChange}
-                        className="w-full p-2 border border-gray-300 rounded"
-                    />
-                </div>
-                <div className="mb-4">
-                    <label className="block text-gray-700">Last Name</label>
-                    <input
-                        type="text"
-                        name="last_name"
-                        value={formData.last_name}
                         onChange={handleChange}
                         className="w-full p-2 border border-gray-300 rounded"
                     />
@@ -71,6 +66,25 @@ const EditProfile = () => {
                         onChange={handleChange}
                         className="w-full p-2 border border-gray-300 rounded"
                     />
+                </div>
+                <div className="mb-4">
+                    <label className="block text-gray-700">Password</label>
+                    <div className="relative">
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            name="password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            className="w-full p-2 border border-gray-300 rounded"
+                        />
+                        <button
+                            type="button"
+                            onClick={toggleShowPassword}
+                            className="absolute inset-y-0 right-0 px-3 py-2 text-gray-600"
+                        >
+                            {showPassword ? "Hide" : "Show"}
+                        </button>
+                    </div>
                 </div>
                 <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
                     Save Changes
