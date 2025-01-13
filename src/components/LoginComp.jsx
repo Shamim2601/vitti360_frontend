@@ -12,18 +12,25 @@ function LoginComp() {
     const dispatch = useDispatch()
     const { register, handleSubmit } = useForm()
     const [error, setError] = useState("")
+    const [loading, setLoading] = useState(false)
 
     const login = async (data) => {
         setError("")
+        setLoading(true)
         try {
             const session = await authService.login(data)
             if (session) {
                 const userData = await authService.getCurrentUser()
-                if (userData) dispatch(authLogin(userData));
+                if (userData){
+                    dispatch(authLogin({userData}));
+                }
                 navigate("/")
             }
         } catch (error) {
             setError(error.message)
+            alert(error.message) // Show error as alert
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -64,8 +71,8 @@ function LoginComp() {
                                 required: true,
                             })}
                         />
-                        <Button type='submit' className='w-full bg-slate-600'>
-                            Login
+                        <Button type='submit' className='w-full bg-slate-600' disabled={loading}>
+                            {loading ? "Logging In..." : "Login"}
                         </Button>
 
                         <a href="/support" className="mt-4 block text-right text-sm text-blue-500 hover:underline"><h6>Forgot password?</h6></a>

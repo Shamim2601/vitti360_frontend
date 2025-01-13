@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import authService from "../services/auth_service";
 import { logout } from "../store/authSlice";
@@ -18,7 +18,7 @@ const Button = ({ children, onClick, className, type = "button" }) => (
 );
 
 const Dashboard = () => {
-  const { userData } = useSelector((state) => state.auth);
+  const userData = useSelector((state) => state.auth.userData);
   const [showForm, setShowForm] = useState(false);
   const [formType, setFormType] = useState("");
   const [formData, setFormData] = useState({
@@ -29,6 +29,10 @@ const Dashboard = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log(userData);
+  }, [userData]);
 
   const handleLogout = async () => {
     try {

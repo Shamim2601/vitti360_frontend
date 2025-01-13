@@ -38,9 +38,13 @@ export class AuthService {
 
     async getCurrentUser() {
         try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                return null;
+            }
             const response = await axios.get(`${this.apiUrl}/auth/current_user/`, {
                 headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    Authorization: `Bearer ${token}`,
                 },
             });
             return response.data;
