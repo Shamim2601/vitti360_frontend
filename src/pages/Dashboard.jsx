@@ -29,6 +29,8 @@ const Dashboard = () => {
     category: "",
     description: "",
   });
+  const [users, setUsers] = useState([]);
+  const [showUsersModal, setShowUsersModal] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -67,6 +69,22 @@ const Dashboard = () => {
     } catch (error) {
       console.error("Submission error:", error);
       alert("Failed to submit. Please try again.");
+    }
+  };
+
+  const handleShowUsers = async () => {
+    try {
+      const token = localStorage.getItem("token"); // Retrieve token from localStorage
+      const response = await axios.get(`${conf.apiUrl}/auth/all_users`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setUsers(response.data);
+      setShowUsersModal(true);
+    } catch (error) {
+      console.error("Failed to fetch users:", error);
+      alert("Failed to load users");
     }
   };
 
@@ -195,6 +213,13 @@ const Dashboard = () => {
               {userData.is_staff && (
                 <>
                   <Button
+                    onClick={handleShowUsers}
+                    className="w-full justify-center bg-blue-600 hover:bg-blue-700"
+                    icon={FiUser}
+                  >
+                    Show All Users
+                  </Button>
+                  <Button
                     onClick={() => handleFormToggle("blog")}
                     className="w-full justify-center bg-green-600 hover:bg-green-700"
                     icon={FiBook}
@@ -213,6 +238,47 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
+
+        {/* Users Modal */}
+        {showUsersModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-2xl mx-4 max-h-[80vh] overflow-y-auto">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-xl font-semibold text-gray-800">
+                  All Users
+                </h3>
+                <button
+                  onClick={() => setShowUsersModal(false)}
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  ✕
+                </button>
+              </div>
+              <div className="divide-y divide-gray-200">
+                {users.map((user) => (
+                  <div key={user.id} className="py-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="text-lg font-medium text-gray-800">
+                          {user.first_name || user.username}
+                        </h4>
+                        <p className="text-gray-600">{user.email}</p>
+                        <p className="text-sm text-gray-500">Username: {user.username}</p>
+                      </div>
+                      <div>
+                        {user.is_staff && (
+                          <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">
+                            Admin
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Form Modal */}
         {showForm && (
