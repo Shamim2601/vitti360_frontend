@@ -66,7 +66,24 @@ export class AuthService {
         } catch (error) {
             throw error.response ? error.response.data : error;
         }
-    }    
+    }   
+    
+    async updateProfile(data) {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('No token found');
+            }
+            const response = await axios.put(`${this.apiUrl}/auth/current_user/update/`, data, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            return response.data;
+        } catch (error) {
+            throw error.response ? error.response.data : error;
+        }
+    }
 }
 
 const authService = new AuthService();

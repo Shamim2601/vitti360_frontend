@@ -30,10 +30,6 @@ const Dashboard = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    console.log(userData);
-  }, [userData]);
-
   const handleLogout = async () => {
     try {
       await authService.logout();

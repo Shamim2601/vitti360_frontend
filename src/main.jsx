@@ -16,6 +16,7 @@ import Blogs from './pages/Blogs.jsx'
 import Bookshop from './pages/Bookshop.jsx'
 import Exams from './pages/Exams.jsx'
 import Dashboard from './pages/Dashboard.jsx'
+import EditProfile from './pages/EditProfile.jsx'
 
 const router = createBrowserRouter([
   {
@@ -97,6 +98,15 @@ const router = createBrowserRouter([
                 <AuthLayout authentication>
                     {" "}
                     <Dashboard />
+                </AuthLayout>
+            ),
+        },
+        {
+            path: "/edit-profile",
+            element: (
+                <AuthLayout authentication>
+                    {" "}
+                    <EditProfile />
                 </AuthLayout>
             ),
         },
