@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../store/authSlice";
 import authService from "../services/auth_service";
 import { useNavigate } from "react-router-dom";
 import conf from "../conf/conf";
 import axios from "axios";
-import { FiMenu, FiX, FiHome, FiUser, FiLogOut, FiEdit, FiPlusCircle, FiBook, FiFileText, FiTrash2 } from 'react-icons/fi';
+import { FiMenu, FiX, FiHome, FiUser, FiLogOut, FiEdit, FiPlusCircle, FiBook, FiFileText, FiTrash2, FiShare2 } from 'react-icons/fi';
 
 // Reusable Button Component with icon support
 const Button = ({ children, onClick, className, type = "button", icon: Icon }) => (
@@ -50,6 +50,7 @@ const Dashboard = () => {
   });
   const [exams, setExams] = useState([]);
   const [showExamsModal, setShowExamsModal] = useState(false);
+  const [performanceResults, setPerformanceResults] = useState([]);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -236,6 +237,40 @@ const Dashboard = () => {
     }));
   };
 
+  const fetchPerformanceResults = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(`${conf.apiUrl}/api/performances/?user=${userData.username}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setPerformanceResults(response.data.sort((a, b) => b.id - a.id));
+    } catch (error) {
+      console.error("Failed to fetch performance results:", error);
+    }
+  };
+
+  const handleShare = (result) => {
+    const shareData = {
+      title: `Exam Performance: ${result.exam_details.title}`,
+      text: `I scored ${result.correct_count} out of ${result.exam_details.num_questions} in the ${result.exam_details.title} exam.`,
+      url: window.location.href
+    };
+
+    if (navigator.share) {
+      navigator.share(shareData).catch(console.error);
+    } else {
+      alert('Sharing is not supported in this browser.');
+    }
+  };
+
+  useEffect(() => {
+    if (!userData.is_staff) {
+      fetchPerformanceResults();
+    }
+  }, [userData]);
+
   if (!userData) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
@@ -358,7 +393,7 @@ const Dashboard = () => {
           <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
             <h3 className="text-lg font-semibold text-gray-700 mb-4">Quick Actions</h3>
             <div className="space-y-4">
-              {userData.is_staff && (
+              {userData.is_staff ? (
                 <>
                   <Button
                     onClick={handleShowUsers}
@@ -396,6 +431,28 @@ const Dashboard = () => {
                     Add New Exam
                   </Button>
                 </>
+              ) : (
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-700 mb-4">Performance Results</h3>
+                  <div className="space-y-4">
+                    {performanceResults.map((result) => (
+                      <div key={result.id} className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+                        <h4 className="text-lg font-medium text-gray-800">{result.exam_details.title}</h4>
+                        <p className="text-gray-600">Category: {result.exam_details.category}</p>
+                        <p className="text-gray-600">Created At: {new Date(result.exam_details.created_at).toLocaleString()}</p>
+                        <p className="text-gray-600">Time Taken: {result.exam_duration} / {result.exam_details.duration} minutes</p>
+                        <p className="text-gray-600">Score: {result.correct_count} / {result.exam_details.num_questions}</p>
+                        <p className="text-gray-600">Accuracy: {((result.correct_count / result.exam_details.num_questions) * 100).toFixed(2)}%</p>
+                        <button
+                          onClick={() => handleShare(result)}
+                          className="mt-2 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 flex items-center justify-center gap-2"
+                        >
+                          <FiShare2 /> Share
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               )}
             </div>
           </div>

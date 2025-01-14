@@ -1,45 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import conf from '../conf/conf';
 import { FiClock, FiArrowRight, FiArrowLeft } from 'react-icons/fi';
-
-const dummyExams = [
-  {
-    id: 1,
-    title: "Basic English Grammar",
-    duration: "30 minutes",
-    category: "English",
-    questions: [
-      {
-        id: 1,
-        question: "What is the correct form of the verb in the sentence: 'She ____ to the store every day.'?",
-        options: ["go", "goes", "going", "gone"],
-        answer: "goes",
-        explanation: "Third-person singular subjects require the verb with 's' in present simple tense."
-      },
-      {
-        id: 2,
-        question: "Which word is a noun in the sentence: 'The cat sat on the mat.'?",
-        options: ["cat", "sat", "on", "the"],
-        answer: "cat",
-        explanation: "A noun is a person, place, thing, or idea. 'Cat' is a thing, making it a noun."
-      },
-      // Add more questions...
-    ]
-  },
-  {
-    id: 2,
-    title: "Advanced Grammar Test",
-    duration: "45 minutes",
-    category: "English",
-    questions: [] // Add questions here
-  },
-  {
-    id: 3,
-    title: "Basic Math Test",
-    duration: "30 minutes",
-    category: "Math",
-    questions: [] // Add questions here
-  }
-];
+import { useSelector } from 'react-redux';
 
 const categories = ["All", "English", "Math"];
 
@@ -48,12 +11,12 @@ const ExamCard = ({ exam, onStart }) => (
     <h3 className="text-xl font-semibold text-gray-800 mb-2">{exam.title}</h3>
     <div className="flex items-center text-gray-600 mb-4">
       <FiClock className="mr-2" />
-      <span>{exam.duration}</span>
+      <span>{exam.duration} minutes</span>
     </div>
     <p className="text-gray-600 mb-4">Category: {exam.category}</p>
-    <p className="text-gray-600 mb-4">Questions: {exam.questions.length}</p>
+    <p className="text-gray-600 mb-4">Questions: {exam.num_questions}</p>
     <button
-      onClick={() => onStart(exam)}
+      onClick={() => onStart(exam.id)}
       className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
     >
       Start Exam
@@ -62,17 +25,62 @@ const ExamCard = ({ exam, onStart }) => (
 );
 
 const Exams = () => {
+  const [exams, setExams] = useState([]);
   const [selectedExam, setSelectedExam] = useState(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState({});
   const [showResults, setShowResults] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [timePassed, setTimePassed] = useState(0);
+  const [remainingTime, setRemainingTime] = useState(0);
+  const userData = useSelector((state) => state.auth.userData);
 
-  const handleStartExam = (exam) => {
-    setSelectedExam(exam);
-    setCurrentQuestionIndex(0);
-    setUserAnswers({});
-    setShowResults(false);
+  useEffect(() => {
+    const fetchExams = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`${conf.apiUrl}/api/exams/`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        setExams(response.data);
+      } catch (error) {
+        console.error('Failed to fetch exams:', error);
+      }
+    };
+
+    fetchExams();
+  }, []);
+
+  useEffect(() => {
+    if (selectedExam) {
+      const interval = setInterval(() => {
+        setTimePassed(prev => prev + 1);
+        setRemainingTime(selectedExam.duration * 60 - timePassed - 1);
+      }, 1000);
+
+      return () => clearInterval(interval);
+    }
+  }, [selectedExam, timePassed]);
+
+  const handleStartExam = async (examId) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`${conf.apiUrl}/api/exams/${examId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      setSelectedExam(response.data);
+      setCurrentQuestionIndex(0);
+      setUserAnswers({});
+      setShowResults(false);
+      setTimePassed(0);
+      setRemainingTime(response.data.duration * 60);
+    } catch (error) {
+      console.error('Failed to fetch exam details:', error);
+    }
   };
 
   const handleAnswer = (answer) => {
@@ -87,6 +95,7 @@ const Exams = () => {
       setCurrentQuestionIndex(prev => prev + 1);
     } else {
       setShowResults(true);
+      handleSubmitResults();
     }
   };
 
@@ -106,9 +115,29 @@ const Exams = () => {
     return score;
   };
 
+  const handleSubmitResults = async () => {
+    const score = calculateScore();
+
+    try {
+      const token = localStorage.getItem('token');
+      await axios.post(`${conf.apiUrl}/api/performances/create/`, {
+        username: userData.username,
+        examId: selectedExam.id,
+        exam_duration: Math.floor(timePassed / 60),
+        correct_count: score
+      }, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+    } catch (error) {
+      console.error('Failed to submit results:', error);
+    }
+  };
+
   const filteredExams = selectedCategory === "All"
-    ? dummyExams
-    : dummyExams.filter(exam => exam.category === selectedCategory);
+    ? exams
+    : exams.filter(exam => exam.category === selectedCategory);
 
   const currentQuestion = selectedExam?.questions[currentQuestionIndex];
 
@@ -152,9 +181,12 @@ const Exams = () => {
             </p>
           </div>
           <div className="space-y-6">
+            <p className="text-gray-600">Exam ID: {selectedExam.id}</p>
+            <p className="text-gray-600">Title: {selectedExam.title}</p>
+            <p className="text-gray-600">Category: {selectedExam.category}</p>
             {selectedExam.questions.map((question, index) => (
               <div key={index} className="border-b pb-4">
-                <p className="font-medium mb-2">{question.question}</p>
+                <p className="font-medium mb-2">{question.question_text}</p>
                 <p className="text-gray-600">Your answer: 
                   <span className={userAnswers[index] === question.answer ? 
                     "text-green-600 ml-2 font-medium" : 
@@ -218,7 +250,7 @@ const Exams = () => {
         </div>
 
         <div className="mb-8">
-          <p className="text-lg text-gray-800 mb-6">{currentQuestion.question}</p>
+          <p className="text-lg text-gray-800 mb-6">{currentQuestion.question_text}</p>
           <div className="space-y-3">
             {currentQuestion.options.map((option, index) => (
               <button
@@ -254,6 +286,11 @@ const Exams = () => {
           >
             {currentQuestionIndex === selectedExam.questions.length - 1 ? 'Finish' : 'Next'} <FiArrowRight className="ml-2" />
           </button>
+        </div>
+
+        <div className="mt-6 text-gray-600">
+          <p>Time Passed: {Math.floor(timePassed / 60)}:{timePassed % 60 < 10 ? '0' : ''}{timePassed % 60}</p>
+          <p>Remaining Time: {Math.floor(remainingTime / 60)}:{remainingTime % 60 < 10 ? '0' : ''}{remainingTime % 60}</p>
         </div>
       </div>
     </div>
