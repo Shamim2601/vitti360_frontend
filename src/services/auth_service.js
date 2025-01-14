@@ -74,11 +74,27 @@ export class AuthService {
             if (!token) {
                 throw new Error('No token found');
             }
-            const response = await axios.put(`${this.apiUrl}/auth/current_user/update/`, data, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+            const requestData = {
+                first_name: data.first_name,
+                email: data.email,
+                username: data.username,
+            };
+
+            // Only include password if it's not empty
+            if (data.password && data.password.length > 0) {
+                requestData.password = data.password;
+            }
+
+            const response = await axios.put(
+                `${this.apiUrl}/auth/current_user/update/`,
+                requestData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
             return response.data;
         } catch (error) {
             throw error.response ? error.response.data : error;

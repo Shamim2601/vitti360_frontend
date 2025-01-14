@@ -562,7 +562,7 @@ const Dashboard = () => {
                   <Button
                     type="button"
                     onClick={addQuestion}
-                    className="bg-green-600 hover:bg-green-700"
+                    className="text-sm px-4 py-1.5 bg-green-600 hover:bg-green-700"
                     icon={FiPlusCircle}
                   >
                     Add Question

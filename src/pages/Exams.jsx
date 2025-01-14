@@ -199,11 +199,11 @@ const Exams = () => {
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => setSelectedExam(null)}
-                className="px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg flex items-center"
+                className="pr-2 text-sm bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg flex items-center"
               >
-                ← Back to Exams
+                ← Back
               </button>
-              <h2 className="text-xl font-bold text-gray-800">{selectedExam.title}</h2>
+              <h2 className="mx-2 text-xl font-bold text-gray-800">{selectedExam.title}</h2>
             </div>
             <span className="text-gray-600">
               Question {currentQuestionIndex + 1} of {selectedExam.questions.length}

@@ -28,7 +28,7 @@ function LoginComp() {
             }
         } catch (error) {
             setError(error.message)
-            alert(error.message) // Show error as alert
+            alert("Invalid credentials")
         } finally {
             setLoading(false)
         }
