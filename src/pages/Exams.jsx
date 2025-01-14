@@ -44,7 +44,9 @@ const Exams = () => {
             'Authorization': `Bearer ${token}`
           }
         });
-        setExams(response.data);
+
+        const sortedExams = response.data.sort((a, b) => b.id - a.id);
+        setExams(sortedExams);
       } catch (error) {
         console.error('Failed to fetch exams:', error);
       }

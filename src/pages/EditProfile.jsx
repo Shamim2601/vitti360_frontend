@@ -58,7 +58,7 @@ const EditProfile = () => {
                     />
                 </div>
                 <div className="mb-4">
-                    <label className="block text-gray-700">Username</label>
+                    <label className="block text-gray-700">Phone number</label>
                     <input
                         type="text"
                         name="username"

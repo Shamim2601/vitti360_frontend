@@ -265,6 +265,24 @@ const Dashboard = () => {
     }
   };
 
+  const handleDeleteUser = async (username) => {
+    if (window.confirm(`Are you sure you want to delete user "${username}"?`)) {
+      try {
+        const token = localStorage.getItem("token");
+        await axios.delete(`${conf.apiUrl}/auth/delete/${username}/`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setUsers(users.filter(user => user.username !== username));
+        alert("User deleted successfully!");
+      } catch (error) {
+        console.error("Failed to delete user:", error);
+        alert(error.response?.data?.message || "Failed to delete user. Please try again.");
+      }
+    }
+  };
+
   useEffect(() => {
     if (!userData.is_staff) {
       fetchPerformanceResults();
@@ -484,11 +502,19 @@ const Dashboard = () => {
                         <p className="text-gray-600">{user.email}</p>
                         <p className="text-sm text-gray-500">Username: {user.username}</p>
                       </div>
-                      <div>
+                      <div className="flex items-center gap-4">
                         {user.is_staff && (
                           <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">
                             Admin
                           </span>
+                        )}
+                        {!user.is_staff && ( // Only show delete button for non-admin users
+                          <button
+                            onClick={() => handleDeleteUser(user.username)}
+                            className="text-red-500 hover:text-red-700 flex items-center gap-2"
+                          >
+                            <FiTrash2 className="w-5 h-5" />
+                          </button>
                         )}
                       </div>
                     </div>
