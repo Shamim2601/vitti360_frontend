@@ -28,6 +28,7 @@ const Dashboard = () => {
     title: "",
     category: "",
     description: "",
+    url: ""
   });
   const [users, setUsers] = useState([]);
   const [showUsersModal, setShowUsersModal] = useState(false);
@@ -36,6 +37,8 @@ const Dashboard = () => {
     title: "",
     duration: "",
     category: "",
+    start_at: "",
+    end_at: "",
     questions: [
       {
         question: "",
@@ -45,6 +48,8 @@ const Dashboard = () => {
       }
     ]
   });
+  const [exams, setExams] = useState([]);
+  const [showExamsModal, setShowExamsModal] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -74,11 +79,16 @@ const Dashboard = () => {
     const endpoint = formType === "blog" ? "/api/blogs" : "/api/circulars";
 
     try {
+      const token = localStorage.getItem("token");
       await axios.post(`${conf.apiUrl}${endpoint}`, {
         ...formData,
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
       });
       alert(`${formType === "blog" ? "Blog" : "Circular"} added successfully!`);
-      setFormData({ title: "", category: "", description: "" });
+      setFormData({ title: "", category: "", description: "", url: "" });
       setShowForm(false);
     } catch (error) {
       console.error("Submission error:", error);
@@ -102,11 +112,62 @@ const Dashboard = () => {
     }
   };
 
+  const handleShowExams = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(`${conf.apiUrl}/api/exams/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setExams(response.data);
+      setShowExamsModal(true);
+    } catch (error) {
+      console.error("Failed to fetch exams:", error);
+      alert("Failed to load exams");
+    }
+  };
+
+  const handleDeleteExam = async (examId) => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.delete(`${conf.apiUrl}/api/exams/${examId}/delete/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setExams(exams.filter(exam => exam.id !== examId));
+      alert("Exam deleted successfully!");
+    } catch (error) {
+      console.error("Failed to delete exam:", error);
+      alert("Failed to delete exam. Please try again.");
+    }
+  };
+
   const handleExamFormSubmit = async (e) => {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token");
-      await axios.post(`${conf.apiUrl}/api/exams`, examFormData, {
+      const payload = {
+        ...examFormData,
+        questions: examFormData.questions.map((q, index) => ({
+          id: index + 1,
+          question_text: q.question,
+          options: q.options,
+          answer: q.answer,
+          explanation: q.explanation
+        }))
+      };
+
+      // Conditionally include start_at and end_at
+      if (!examFormData.start_at) {
+        delete payload.start_at;
+      }
+      if (!examFormData.end_at) {
+        delete payload.end_at;
+      }
+
+      await axios.post(`${conf.apiUrl}/api/exams/create/`, payload, {
         headers: {
           Authorization: `Bearer ${token}`,
         }
@@ -117,6 +178,8 @@ const Dashboard = () => {
         title: "",
         duration: "",
         category: "",
+        start_at: "",
+        end_at: "",
         questions: [
           {
             question: "",
@@ -305,6 +368,13 @@ const Dashboard = () => {
                     Show All Users
                   </Button>
                   <Button
+                    onClick={handleShowExams}
+                    className="w-full justify-center bg-blue-600 hover:bg-blue-700"
+                    icon={FiBook}
+                  >
+                    Show All Exams
+                  </Button>
+                  <Button
                     onClick={() => handleFormToggle("blog")}
                     className="w-full justify-center bg-green-600 hover:bg-green-700"
                     icon={FiBook}
@@ -372,6 +442,44 @@ const Dashboard = () => {
           </div>
         )}
 
+        {/* Exams Modal */}
+        {showExamsModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-2xl mx-4 max-h-[80vh] overflow-y-auto">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-xl font-semibold text-gray-800">
+                  All Exams
+                </h3>
+                <button
+                  onClick={() => setShowExamsModal(false)}
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  ✕
+                </button>
+              </div>
+              <div className="divide-y divide-gray-200">
+                {exams.map((exam) => (
+                  <div key={exam.id} className="py-4 flex justify-between items-center">
+                    <div>
+                      <h4 className="text-lg font-medium text-gray-800">
+                        {exam.title}
+                      </h4>
+                      <p className="text-gray-600">Category: {exam.category}</p>
+                      <p className="text-gray-600">Duration: {exam.duration} minutes</p>
+                    </div>
+                    <button
+                      onClick={() => handleDeleteExam(exam.id)}
+                      className="text-red-500 hover:text-red-700 flex items-center gap-2"
+                    >
+                      <FiTrash2 /> Delete
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Form Modal */}
         {showForm && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
@@ -423,6 +531,18 @@ const Dashboard = () => {
                     placeholder="Enter description"
                     required
                   ></textarea>
+                </div>
+                <div>
+                  <label className="block text-gray-700 mb-2">URL</label>
+                  <input
+                    type="text"
+                    name="url"
+                    value={formData.url}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Enter URL"
+                    required
+                  />
                 </div>
                 <div className="flex justify-end gap-4 mt-8">
                   <Button
@@ -487,6 +607,24 @@ const Dashboard = () => {
                       onChange={(e) => setExamFormData(prev => ({ ...prev, category: e.target.value }))}
                       className="w-full px-4 py-2 border rounded-lg"
                       required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-700 mb-2">Start At</label>
+                    <input
+                      type="datetime-local"
+                      value={examFormData.start_at}
+                      onChange={(e) => setExamFormData(prev => ({ ...prev, start_at: e.target.value }))}
+                      className="w-full px-4 py-2 border rounded-lg"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-700 mb-2">End At</label>
+                    <input
+                      type="datetime-local"
+                      value={examFormData.end_at}
+                      onChange={(e) => setExamFormData(prev => ({ ...prev, end_at: e.target.value }))}
+                      className="w-full px-4 py-2 border rounded-lg"
                     />
                   </div>
                 </div>
