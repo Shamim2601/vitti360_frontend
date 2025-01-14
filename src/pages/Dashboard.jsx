@@ -254,7 +254,7 @@ const Dashboard = () => {
   const handleShare = (result) => {
     const shareData = {
       title: `Exam Performance: ${result.exam_details.title}`,
-      text: `Exam : ${result.exam_details.title} (Id-${result.exam_details.id})\n Score : ${result.correct_count} / ${result.exam_details.num_questions} in ${result.exam_duration} minutes `,
+      text: `Exam : ${result.exam_details.title} (Id-${result.examId})\n Score : ${result.correct_count} / ${result.exam_details.num_questions} in ${result.exam_duration} minutes `,
       url: window.location.href
     };
 
