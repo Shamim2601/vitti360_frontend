@@ -97,10 +97,10 @@ const Exams = () => {
     }
   };
 
-  const handleAnswer = (answer) => {
+  const handleAnswer = (qIndex, answer) => {
     setUserAnswers(prev => ({
       ...prev,
-      [currentQuestionIndex]: answer
+      [qIndex]: answer
     }));
   };
 
@@ -314,10 +314,17 @@ Time Taken: ${Math.floor(timePassed / 60)} minutes`,
               <div
                 key={qIndex}
                 id={`question-${qIndex}`}
-                className="bg-white rounded-lg shadow-sm p-6"
+                className="bg-white rounded-lg shadow-sm p-6 mb-6"
               >
                 <p className="text-lg font-medium text-gray-800 mb-4">
-                  {qIndex + 1}. {question.question_text}
+                  <span className={`inline-block w-8 h-8 text-center leading-8 rounded-full mr-2 
+                    ${isQuestionAnswered(qIndex) 
+                      ? 'bg-green-100 text-green-800 font-bold'
+                      : 'bg-gray-100 text-gray-600'}`}
+                  >
+                    {qIndex + 1}
+                  </span>
+                  {question.question_text}
                 </p>
                 <div className="space-y-3">
                   {question.options.map((option, oIndex) => (
@@ -330,7 +337,7 @@ Time Taken: ${Math.floor(timePassed / 60)} minutes`,
                         name={`question-${qIndex}`}
                         value={option}
                         checked={userAnswers[qIndex] === option}
-                        onChange={() => handleAnswer(option)}
+                        onChange={() => handleAnswer(qIndex, option)}
                         className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
                       />
                       <span className="text-gray-700">{option}</span>
