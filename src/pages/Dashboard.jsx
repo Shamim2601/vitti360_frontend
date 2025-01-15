@@ -283,6 +283,24 @@ const Dashboard = () => {
     }
   };
 
+  const handleDeletePerformance = async (id) => {
+    if (window.confirm('Are you sure you want to delete this performance record?')) {
+      try {
+        const token = localStorage.getItem("token");
+        await axios.delete(`${conf.apiUrl}/api/performances/${id}/delete/`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setPerformanceResults(prev => prev.filter(result => result.id !== id));
+        alert("Performance record deleted successfully!");
+      } catch (error) {
+        console.error("Failed to delete performance:", error);
+        alert("Failed to delete performance record");
+      }
+    }
+  };
+
   useEffect(() => {
     if (!userData.is_staff) {
       fetchPerformanceResults();
@@ -461,12 +479,20 @@ const Dashboard = () => {
                         <p className="text-gray-600">Time Taken: {result.exam_duration} / {result.exam_details.duration} minutes</p>
                         <p className="text-gray-600">Score: {result.correct_count} / {result.exam_details.num_questions}</p>
                         <p className="text-gray-600">Accuracy: {((result.correct_count / result.exam_details.num_questions) * 100).toFixed(2)}%</p>
-                        <button
-                          onClick={() => handleShare(result)}
-                          className="mt-2 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 flex items-center justify-center gap-2"
-                        >
-                          <FiShare2 /> Share
-                        </button>
+                        <div className="flex gap-2 mt-2">
+                          <button
+                            onClick={() => handleShare(result)}
+                            className="flex-1 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 flex items-center justify-center gap-2"
+                          >
+                            <FiShare2 /> Share
+                          </button>
+                          <button
+                            onClick={() => handleDeletePerformance(result.id)}
+                            className="flex-1 bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 flex items-center justify-center gap-2"
+                          >
+                            <FiTrash2 /> Delete
+                          </button>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -783,26 +809,24 @@ const Dashboard = () => {
                   <Button
                     type="button"
                     onClick={addQuestion}
-                    className="text-sm px-4 py-1.5 bg-green-600 hover:bg-green-700"
+                    className="px-1 bg-green-600 hover:bg-green-700 text-sm"
                     icon={FiPlusCircle}
                   >
-                    Add Question
+                    Que
                   </Button>
-                  <div className="space-x-4">
-                    <Button
-                      type="submit"
-                      className="bg-blue-600 hover:bg-blue-700"
-                    >
-                      Create Exam
-                    </Button>
-                    <Button
+                  <Button
                       type="button"
                       onClick={() => setShowExamForm(false)}
                       className="bg-gray-600 hover:bg-gray-700"
                     >
                       Cancel
                     </Button>
-                  </div>
+                  <Button
+                    type="submit"
+                    className="bg-blue-600 hover:bg-blue-700"
+                  >
+                    Create
+                  </Button>
                 </div>
               </form>
             </div>
