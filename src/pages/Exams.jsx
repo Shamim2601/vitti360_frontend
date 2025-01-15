@@ -62,7 +62,8 @@ const Exams = () => {
     if (selectedExam) {
       const interval = setInterval(() => {
         setTimePassed(prev => prev + 1);
-        setRemainingTime(selectedExam.duration * 60 - timePassed - 1);
+        const remaining = selectedExam.duration * 60 - timePassed - 1;
+        setRemainingTime(Math.max(0, remaining)); // Ensure remaining time doesn't go below 0
       }, 1000);
 
       return () => clearInterval(interval);
@@ -284,32 +285,34 @@ Time Taken: ${Math.floor(timePassed / 60)} minutes`,
     return (
       <div className="min-h-screen bg-gray-50">
         <div className="max-w-4xl mx-auto relative">
-          {/* Fixed Header within container */}
-          <div className="sticky top-0 bg-white shadow-sm z-10 px-6 py-4 mt-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <button
-                  onClick={() => setSelectedExam(null)}
-                  className="text-gray-600 hover:text-gray-900 flex items-center gap-2"
-                >
-                  <FiArrowLeft /> Back
-                </button>
-                <h2 className="text-lg font-semibold text-gray-800">{selectedExam.title}</h2>
-              </div>
-              <div className="flex items-center space-x-6 text-sm">
-                <div className="flex items-center gap-2">
-                  <FiClock className="text-gray-500" />
-                  <span>{Math.floor(remainingTime / 60)}:{remainingTime % 60 < 10 ? '0' : ''}{remainingTime % 60}</span>
+          {/* Fixed Header */}
+          <div className="fixed top-51 left-0 right-0 bg-white shadow-sm z-10">
+            <div className="max-w-4xl mx-auto px-6 py-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  <button
+                    onClick={() => setSelectedExam(null)}
+                    className="text-gray-600 hover:text-gray-900 flex items-center gap-2"
+                  >
+                    <FiArrowLeft /> Back
+                  </button>
+                  <h2 className="text-lg font-semibold text-gray-800">{selectedExam.title}</h2>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span>Q {selectedExam.questions.length}</span>
+                <div className="flex items-center space-x-6 text-sm">
+                  <div className="flex items-center gap-2">
+                    <FiClock className="text-gray-500" />
+                    <span>{Math.floor(remainingTime / 60)}:{remainingTime % 60 < 10 ? '0' : ''}{remainingTime % 60}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span>Q {selectedExam.questions.length}</span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Questions Content */}
-          <div className="px-6 py-4">
+          {/* Main Content with top padding to account for fixed header */}
+          <div className="px-6 pt-20 pb-2 mt-5">
             {selectedExam.questions.map((question, qIndex) => (
               <div
                 key={qIndex}
@@ -348,25 +351,22 @@ Time Taken: ${Math.floor(timePassed / 60)} minutes`,
             ))}
           </div>
 
-          {/* Submit Button */}
-          <div className="px-6 py-4">
+          {/* Submit Button and Back to Top */}
+          <div className="px-6 py-4 flex items-center justify-between">
             <button
               onClick={handleSubmit}
               className="bg-blue-600 text-white py-2 px-6 rounded-lg hover:bg-blue-700 font-medium"
             >
               Submit Exam
             </button>
-          </div>
-
-          {/* Back to Top Button */}
-          {showBackToTop && (
+            
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="fixed bottom-6 right-6 bg-gray-800 text-white p-3 rounded-full shadow-lg hover:bg-gray-700"
+              className="flex items-center gap-2 text-gray-600 hover:text-gray-800 py-2 px-4"
             >
-              <FiArrowUp />
+              <FiArrowUp /> Back to Top
             </button>
-          )}
+          </div>
         </div>
       </div>
     );
