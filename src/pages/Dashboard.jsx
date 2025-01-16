@@ -255,7 +255,7 @@ const Dashboard = () => {
     const shareData = {
       title: `Exam Performance: ${result.exam_details.title}`,
       text: `Exam : ${result.exam_details.title} (Id-${result.examId})\n Score : ${result.correct_count} / ${result.exam_details.num_questions} in ${result.exam_duration} minutes\n`,
-      url: ``
+      url: `#`
     };
 
     if (navigator.share) {
