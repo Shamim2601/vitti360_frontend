@@ -185,7 +185,7 @@ Category: ${selectedExam.category}
 Score: ${score}/${selectedExam.questions.length}
 Accuracy: ${Math.round((score / selectedExam.questions.length) * 100)}%
 Time Taken: ${Math.floor(timePassed / 60)} minutes\n`,
-      url:`#`
+      url:`https://www.vitti360.xyz/`
     };
 
     if (navigator.share) {
